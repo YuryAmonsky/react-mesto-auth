@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
@@ -9,8 +10,12 @@ import ImagePopup from './ImagePopup';
 import Footer from './Footer';
 import { api } from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './Login';
+import Register from './Register';
 
 function App() {
+  const [loggedIn, SetLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({
     "name": '',
     "about": '',
@@ -35,6 +40,12 @@ function App() {
  */
   const [submitButtonState, setSsubmitButtonState] = useState({ text: '', disabled: false });
 
+  const handleRegister = ()=>{
+
+  }
+  const handleLogin = () => {
+
+  }
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
     setSsubmitButtonState({ text: 'Сохранить', disabled: false });
@@ -63,8 +74,8 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setDeletePlaceConfirm({ isOpen: false, card: {} });    
-    setSelectedCard(null);    
+    setDeletePlaceConfirm({ isOpen: false, card: {} });
+    setSelectedCard(null);
   }
 
   /*обработчик закрытия попапа по нажатию на фон*/
@@ -78,7 +89,7 @@ function App() {
     if (evt.keyCode === 27) {
       closeAllPopups();
     }
-  },[]);
+  }, []);
 
   const handleUpdateUser = (objUserInfo) => {
     setSsubmitButtonState({ text: 'Сохранение', disabled: true });
@@ -140,7 +151,7 @@ function App() {
         alert(`Ошибка удаления карточки:\n ${err.status}\n ${err.text}`);
       })
       .finally(() => {
-        setSsubmitButtonState({ text: 'Да', disabled: false });        
+        setSsubmitButtonState({ text: 'Да', disabled: false });
       });
   }
 
@@ -156,24 +167,24 @@ function App() {
       });
   }
 
-  const handleFormValidate = useCallback((isValid, formName)=>{
-    
-    switch(formName){
+  const handleFormValidate = useCallback((isValid, formName) => {
+
+    switch (formName) {
       case 'edit-profile':
-        setSsubmitButtonState({disabled: !isValid, text:'Сохранить'});
+        setSsubmitButtonState({ disabled: !isValid, text: 'Сохранить' });
         break;
       case 'edit-avatar':
-        setSsubmitButtonState({disabled: !isValid, text:'Сохранить'});
+        setSsubmitButtonState({ disabled: !isValid, text: 'Сохранить' });
         break;
       case 'new-location':
-        setSsubmitButtonState({disabled: !isValid, text:'Создать'});
+        setSsubmitButtonState({ disabled: !isValid, text: 'Создать' });
         break;
       default:
 
         break;
-    }    
-  }, []); 
-  
+    }
+  }, []);
+
   useEffect(() => {
     Promise.all([
       api.getUserInfo(),
@@ -188,73 +199,120 @@ function App() {
       });
   }, []);
 
-  useEffect(()=>{
-    if(isEditAvatarPopupOpen||isEditProfilePopupOpen||isAddPlacePopupOpen||deletePlaceConfirm.isOpen|| selectedCard){
+  useEffect(() => {
+    if (isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || deletePlaceConfirm.isOpen || selectedCard) {
       document.addEventListener('keydown', handleKeyDown);
-    }else{
+    } else {
       document.removeEventListener('keydown', handleKeyDown);
-    }    
-  },[isEditAvatarPopupOpen,isEditProfilePopupOpen,isAddPlacePopupOpen, deletePlaceConfirm.isOpen, selectedCard, handleKeyDown]);
-  
+    }
+  }, [isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen, deletePlaceConfirm.isOpen, selectedCard, handleKeyDown]);
+
   return (
+
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onEditAvatar={handleEditAvatarClick}
-          onNewLocation={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onDeleteClick={handleDeleteClick}
-        />
-        <Footer />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onBGClick={handlePopupBGClick}
-          onKeyDown={handleKeyDown}
-          onUpdateUser={handleUpdateUser}
-          onFormValidate={handleFormValidate}
-          buttonState={submitButtonState}         
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onBGClick={handlePopupBGClick}
-          onKeyDown={handleKeyDown}
-          onUpdateAvatar={handleUpdateAvatar}
-          onFormValidate={handleFormValidate}
-          buttonState={submitButtonState}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onBGClick={handlePopupBGClick}
-          onKeyDown={handleKeyDown}
-          onAddPlace={handleAddPlace}
-          onFormValidate={handleFormValidate}
-          buttonState={submitButtonState}
-        />
-        <DeletePlacePopup
-          isOpen={deletePlaceConfirm.isOpen}
-          onClose={closeAllPopups}
-          onBGClick={handlePopupBGClick}
-          onKeyDown={handleKeyDown}
-          card={deletePlaceConfirm.card}
-          onCardDelete={handleCardDelete}
-          buttonState={submitButtonState}
-        />
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-          onBGClick={handlePopupBGClick}
-          onKeyDown={handleKeyDown}
-        />
+        <Switch>       
+          <Route exact path="/react-mesto-auth/sign-in" >
+            <Login
+              name="login"
+              title="Вход"
+              onSubmit={handleLogin}
+              buttonState={submitButtonState}
+            />
+          </Route>
+          <Route path="/react-mesto-auth/sign-up">
+            <Register
+              name="login"
+              title="Регистрация"
+              onSubmit={handleRegister}
+              buttonState={submitButtonState}
+            />
+          </Route>
+          <ProtectedRoute path="/" loggedIn={loggedIn}>
+            <Main
+              cards={cards}
+              onEditProfile={handleEditProfileClick}
+              onEditAvatar={handleEditAvatarClick}
+              onNewLocation={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onDeleteClick={handleDeleteClick}
+            />
+            <Footer />
+            <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onBGClick={handlePopupBGClick}
+            onKeyDown={handleKeyDown}
+            onUpdateUser={handleUpdateUser}
+            onFormValidate={handleFormValidate}
+            buttonState={submitButtonState}
+            />
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onBGClick={handlePopupBGClick}
+              onKeyDown={handleKeyDown}
+              onUpdateAvatar={handleUpdateAvatar}
+              onFormValidate={handleFormValidate}
+              buttonState={submitButtonState}
+            />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onBGClick={handlePopupBGClick}
+              onKeyDown={handleKeyDown}
+              onAddPlace={handleAddPlace}
+              onFormValidate={handleFormValidate}
+              buttonState={submitButtonState}
+            />
+            <DeletePlacePopup
+              isOpen={deletePlaceConfirm.isOpen}
+              onClose={closeAllPopups}
+              onBGClick={handlePopupBGClick}
+              onKeyDown={handleKeyDown}
+              card={deletePlaceConfirm.card}
+              onCardDelete={handleCardDelete}
+              buttonState={submitButtonState}
+            />
+            <ImagePopup
+              card={selectedCard}
+              onClose={closeAllPopups}
+              onBGClick={handlePopupBGClick}
+              onKeyDown={handleKeyDown}
+            />
+          </ProtectedRoute>
+        </Switch>
       </div>
     </CurrentUserContext.Provider>
   );
 }
 
 export default App;
+/*
+<Route path="/sign-up">
+            <Register />
+          </Route>
+          <Route path="/sign-in">
+            <Login
+              name="login"
+              title="Вход"
+              onSubmit={handleLogin}
+              buttonState={submitButtonState}
+            />
+          </Route>
+          <Route exact path="/">
+            <Main
+              cards={cards}
+              onEditProfile={handleEditProfileClick}
+              onEditAvatar={handleEditAvatarClick}
+              onNewLocation={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onDeleteClick={handleDeleteClick}
+            />
+            <Footer />
+          </Route>
+
+          */

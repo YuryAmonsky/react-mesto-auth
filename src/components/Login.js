@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import PopupWithForm from './PopupWithForm';
+import React from "react";
+function Login({ title, name, onSubmit, buttonState, }) {
 
-function Login({ title, name, onSubmit, buttonState, children }){
-
-  retrun (
+  return (
+      <div class="form-container">
+        
         <form
-          className={`dialog-form dialog-form_type_${name}`}
+          className="dialog-form"
           name={name}
           onSubmit={onSubmit}
           noValidate
@@ -13,7 +13,34 @@ function Login({ title, name, onSubmit, buttonState, children }){
           <h2 className="dialog-form__title">
             {title}
           </h2>
-          {children}
+          <input
+            className="dialog-form__input"
+            name="name"
+            id="login"
+            type="text" placeholder="Имя пользователя"
+            value=""
+            minLength="2"
+            maxLength="40"
+            required
+            autoComplete="off"
+          />
+          <span className="dialog-form__input-error">
+
+          </span>
+          <input
+            className="dialog-form__input"
+            name="aboutMe"
+            id="password"
+            type="text" placeholder="Пароль"
+            value=""
+            minLength="2"
+            maxLength="200"
+            required
+            autoComplete="off"
+          />
+          <span className="dialog-form__input-error input-edit-profile-about-me-error">
+
+          </span>
           <button
             className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_disabled" : "dialog-form__submit-button"}
             type="submit"
@@ -23,8 +50,8 @@ function Login({ title, name, onSubmit, buttonState, children }){
           >
             {buttonState.text}
           </button>
-        </form>    
-
+        </form>
+      </div>
   );
 }
 
