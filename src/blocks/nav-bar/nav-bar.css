@@ -1,0 +1,6 @@
+.nav-bar {
+  margin-top: 6px;
+  width:738px;
+  display: flex;
+  justify-content: flex-end;  
+}

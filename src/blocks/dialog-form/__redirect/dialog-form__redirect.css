@@ -1,0 +1,7 @@
+.dialog-form__redirect {
+  grid-column: 2;  
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: baseline;  
+}

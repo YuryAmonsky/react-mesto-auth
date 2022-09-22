@@ -48,7 +48,8 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
       {...commonProps}
     >
       <input
-        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_invalid" : "dialog-form__input"}
+        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+          : "dialog-form__input dialog-form__input_type_popup"}
         name="name"
         id="input-new-location-name"
         type="text"
@@ -67,7 +68,8 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
         {validity.name?.shouldShowError ? validity.name?.error : ""}
       </span>
       <input
-        className={validity.link?.shouldShowError ? "dialog-form__input dialog-form__input_invalid" : "dialog-form__input"}
+        className={validity.link?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+          : "dialog-form__input dialog-form__input_type_popup"}
         name="link"
         id="input-new-location-link"
         type="url"

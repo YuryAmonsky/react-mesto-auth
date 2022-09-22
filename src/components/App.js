@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
@@ -23,11 +23,11 @@ function App() {
     "_id": '',
     "cohort": ''
   });
+  
   const [cards, setCards] = useState([]);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  /** состояние для попапа подтверждения удаления карточки */
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);  
   const [deletePlaceConfirm, setDeletePlaceConfirm] = useState({
     isOpen: false, card: {}
   });
@@ -40,7 +40,7 @@ function App() {
  */
   const [submitButtonState, setSsubmitButtonState] = useState({ text: '', disabled: false });
 
-  const handleRegister = ()=>{
+  const handleRegister = () => {
 
   }
   const handleLogin = () => {
@@ -179,12 +179,19 @@ function App() {
       case 'new-location':
         setSsubmitButtonState({ disabled: !isValid, text: 'Создать' });
         break;
+      case 'login':
+        setSsubmitButtonState({ disabled: !isValid, text: 'Войти' });
+        break;
+      case 'register':
+        setSsubmitButtonState({ disabled: !isValid, text: 'Зарегистрироваться' });
+        break;
       default:
 
         break;
     }
   }, []);
 
+  /**получение данных пользователя и загрузка карточек */
   useEffect(() => {
     Promise.all([
       api.getUserInfo(),
@@ -211,9 +218,13 @@ function App() {
 
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
-        <Switch>       
-          <Route exact path="/react-mesto-auth/sign-in" >
+        <Switch>
+          <Route path="/sign-in" >
+            <Header>
+              <Link to="/sign-up" className="nav-bar__link">
+                Регистрация
+              </Link>
+            </Header>
             <Login
               name="login"
               title="Вход"
@@ -221,13 +232,22 @@ function App() {
               buttonState={submitButtonState}
             />
           </Route>
-          <Route path="/react-mesto-auth/sign-up">
+          <Route path="/sign-up">
+            <Header>
+              <Link to="/sign-in" className="nav-bar__link">
+                Войти
+              </Link>
+            </Header>
             <Register
-              name="login"
+              name="register"
               title="Регистрация"
               onSubmit={handleRegister}
               buttonState={submitButtonState}
-            />
+            >
+              <Link to="/sign-in" className="dialog-form__link">
+                Войти
+              </Link>  
+            </Register>
           </Route>
           <ProtectedRoute path="/" loggedIn={loggedIn}>
             <Main
@@ -241,13 +261,13 @@ function App() {
             />
             <Footer />
             <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onBGClick={handlePopupBGClick}
-            onKeyDown={handleKeyDown}
-            onUpdateUser={handleUpdateUser}
-            onFormValidate={handleFormValidate}
-            buttonState={submitButtonState}
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onBGClick={handlePopupBGClick}
+              onKeyDown={handleKeyDown}
+              onUpdateUser={handleUpdateUser}
+              onFormValidate={handleFormValidate}
+              buttonState={submitButtonState}
             />
             <EditAvatarPopup
               isOpen={isEditAvatarPopupOpen}
@@ -290,29 +310,3 @@ function App() {
 }
 
 export default App;
-/*
-<Route path="/sign-up">
-            <Register />
-          </Route>
-          <Route path="/sign-in">
-            <Login
-              name="login"
-              title="Вход"
-              onSubmit={handleLogin}
-              buttonState={submitButtonState}
-            />
-          </Route>
-          <Route exact path="/">
-            <Main
-              cards={cards}
-              onEditProfile={handleEditProfileClick}
-              onEditAvatar={handleEditAvatarClick}
-              onNewLocation={handleAddPlaceClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onDeleteClick={handleDeleteClick}
-            />
-            <Footer />
-          </Route>
-
-          */

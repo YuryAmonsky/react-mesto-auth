@@ -1,0 +1,24 @@
+.dialog-form__input_type_section {  
+  border-bottom: 2px solid #ccc;
+  background-color: #000;
+  color: #fff;
+
+}
+/*
+.dialog-form__input_type_section:first-of-type {
+  margin: 0;
+}
+
+.dialog-form__input_type_section:last-of-type {
+  margin: 0;
+}
+
+.dialog-form__input_type_section:only-of-type {
+  margin: 54px 0 0 0;
+}*/
+
+@media screen and (max-width: 619px) {
+  .dialog-form__input_type_section:first-of-type {
+    margin-top: calc(75px - 21 * (100vw - 320px) /300);
+  }
+}

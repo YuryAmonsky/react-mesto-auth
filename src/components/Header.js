@@ -1,10 +1,13 @@
 import React from 'react';
 import logo from '../images/logo/logo.svg';
 
-function Header(){
+function Header(props){
   return(
     <header className="header">
       <img className="logo" src={logo} alt="Место" />
+      <nav className="nav-bar">
+        {props.children}
+      </nav>      
     </header>
   );
 

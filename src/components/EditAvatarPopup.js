@@ -37,7 +37,8 @@ function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProp
     >
       <input
         ref={avatarLink}
-        className={validity.avatar?.shouldShowError ? "dialog-form__input dialog-form__input_invalid" : "dialog-form__input"}
+        className={validity.avatar?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+          : "dialog-form__input dialog-form__input_type_popup"}
         name="avatar"
         id="input-edit-avatar"
         type="url"

@@ -54,7 +54,8 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
       {...commonProps}
     >
       <input
-        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_invalid" : "dialog-form__input"}
+        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+          : "dialog-form__input dialog-form__input_type_popup"}
         name="name"
         id="input-edit-profile-name"
         type="text" placeholder="Имя"
@@ -70,7 +71,8 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
         {validity.name?.shouldShowError ? validity.name?.error : ""}
       </span>
       <input
-        className={validity.aboutMe?.shouldShowError ? "dialog-form__input dialog-form__input_invalid" : "dialog-form__input"}
+        className={validity.aboutMe?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+          : "dialog-form__input dialog-form__input_type_popup"}
         name="aboutMe"
         id="input-edit-profile-about-me"
         type="text" placeholder="О себе"
