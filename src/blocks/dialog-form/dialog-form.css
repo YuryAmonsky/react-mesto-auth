@@ -4,8 +4,7 @@
   box-sizing: border-box;
   width: 430px;
   display: flex;
-  flex-direction: column;
-  position: relative;
+  flex-direction: column;  
 }
 
 @media screen and (max-width: 619px) {

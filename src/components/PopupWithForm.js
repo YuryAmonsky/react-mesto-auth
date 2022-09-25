@@ -2,7 +2,7 @@ import React from 'react';
 function PopupWithForm({ title, name, isOpen, onClose, onSubmit, onBGClick, buttonState, children }) {
   return (
     <div
-      className={isOpen ? `popup popup_type_${name} popup_opened` : `popup popup_type_${name}`}
+      className={isOpen ? "popup popup_opened" : "popup"}
     >
       <div
         className="popup__container"
@@ -25,7 +25,7 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, onBGClick, butt
           </h2>
           {children}
           <button
-            className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_theme_dark dialog-form__submit-button_disabled" 
+            className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_popup dialog-form__submit-button_disabled" 
             : "dialog-form__submit-button dialog-form__submit-button_type_popup"}
             type="submit"
             name="submitButton"

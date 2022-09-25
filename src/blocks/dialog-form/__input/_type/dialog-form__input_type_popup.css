@@ -1,4 +1,6 @@
 .dialog-form__input_type_popup {
+  position: relative;
+  z-index: 2;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 

@@ -33,6 +33,9 @@
 @import url(./blocks/popup/__container/popup__container.css);
 @import url(./blocks/popup/_opened/popup_opened.css);
 @import url(./blocks/popup/__close-icon/popup__close-icon.css);
+@import url(./blocks/infotooltip/infotooltip.css);
+@import url(./blocks/infotooltip/__image/infotooltip__image.css);
+@import url(./blocks/infotooltip/__message/infotooltip__message.css);
 @import url(./blocks/dialog-form/dialog-form.css);
 @import url(./blocks/dialog-form/_type/dialog-form_type_popup.css);
 @import url(./blocks/dialog-form/_type/dialog-form_type_section.css);

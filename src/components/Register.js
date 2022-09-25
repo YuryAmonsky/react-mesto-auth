@@ -1,85 +1,108 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import useFormValidator from "../hooks/useFormValidator";
 
-function Register({ title, name, onSubmit, buttonState, children }){
+function Register({ title, name, onOpen, onSubmit, onFormValidate, buttonState, children }) {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('register', onFormValidate);
+  
+  const handleEmailChange = (evt) => {
+    setEmail(evt.target.value);
+    cbFormValidate(evt);
+  }
+  
+  const handlePasswordChange = (evt) => {
+    setPassword(evt.target.value);
+    cbFormValidate(evt);
+  }
+  
+  const handleEmailBlur = (evt) => {
+    cbFormValidate(evt);
+  }
+
+  const handlePasswordBlur = (evt) => {
+    cbFormValidate(evt);
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    onSubmit(
+      email,
+      password
+    );
+  }
+
+  useEffect(() => {
+    cbResetValidator(true, false);
+    onOpen();
+  }, []);
 
   return (
-    <div class="form-container">
-      
+    <div className="form-container">
+
       <form
         className="dialog-form dialog-form_type_section"
         name={name}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
         noValidate
       >
         <h2 className="dialog-form__title dialog-form__title_type_section">
           {title}
         </h2>
         <input
-          className="dialog-form__input dialog-form__input_type_section"
-          name="userName"
-          id="userName"
+          className={validity.email?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
+            : "dialog-form__input dialog-form__input_type_section"}
+          name="email"
+          id="email"
           type="text"
-          placeholder="Email"          
+          placeholder="Email"
+          value={email}
           minLength="2"
           maxLength="40"
           required
           autoComplete="off"
+          onInput={handleEmailChange}
+          onBlur={handleEmailBlur}
         />
         <span className="dialog-form__input-error">
-
+          {validity.email?.shouldShowError ? validity.email?.error : ""}
         </span>
         <input
-          className="dialog-form__input dialog-form__input_type_section"
+          className={validity.password?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
+            : "dialog-form__input dialog-form__input_type_section"}
           name="password"
           id="password"
-          type="text" 
-          placeholder="Пароль"          
-          minLength="2"
+          type="password"
+          placeholder="Пароль"
+          value={password}
+          minLength="8"
           maxLength="200"
           required
           autoComplete="off"
+          onInput={handlePasswordChange}
+          onBlur={handlePasswordBlur}
         />
         <span className="dialog-form__input-error">
-
+          {validity.password?.shouldShowError ? validity.password?.error : ""}
         </span>
         <button
-          className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_section dialog-form__submit-button_disabled" 
-          : "dialog-form__submit-button dialog-form__submit-button_type_section"}
+          className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_section dialog-form__submit-button_disabled"
+            : "dialog-form__submit-button dialog-form__submit-button_type_section"}
           type="submit"
           name="submitButton"
           formMethod="post"
           disabled={buttonState.disabled}
         >
-          Зарегистрироваться
+          {buttonState.text}
         </button>
-        <div class="dialog-form__redirect">
+        <div className="dialog-form__redirect">
           <p>Уже зарегистрированы?</p>
           {children}
         </div>
-      </form>      
+      </form>
     </div>
-);
+  );
 }
 
 export default Register;
-
-// <form
-//           className={`dialog-form dialog-form_type_${name}`}
-//           name={name}
-//           onSubmit={onSubmit}
-//           noValidate
-//         >
-//           <h2 className="dialog-form__title">
-//             {title}
-//           </h2>
-//           {children}
-//           <button
-//             className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_disabled" : "dialog-form__submit-button"}
-//             type="submit"
-//             name="submitButton"
-//             formMethod="post"
-//             disabled={buttonState.disabled}
-//           >
-//             {buttonState.text}
-//           </button>
-//         </form>    
