@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import { api } from '../utils/Api';
 import { register, authorize, validateToken } from '../utils/Auth';
@@ -18,7 +18,14 @@ import Footer from './Footer';
 
 
 function App() {
-  //const [loggedIn, setLoggedIn] = useState(false);
+  /*isTokenCheckFinished используется для устранения 
+  *промаргивания формы входа приоткрытии страницы
+  */
+  const isTokenCheckFinished = useRef(false);
+  /**isUserDataLoaded используется для устанения показа пустого профиля,
+   *  пока загружаются данные пользователя 
+  */
+  const isUserDataLoaded = useRef(false);
   const history = useHistory();
   const [currentUserAccount, setCurrentUserAccount] =
     useState({
@@ -35,13 +42,12 @@ function App() {
     });
 
   const [cards, setCards] = useState([]);
-  const [regInfo, setRegInfo] = useState({ isOpen: false, success: false, message: '' });
+  const [regInfo, setRegInfo] = useState({ success: false, message: '' });
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [deletePlaceConfirm, setDeletePlaceConfirm] = useState({
-    isOpen: false, card: {}
-  });
+  const [deletePlaceConfirm, setDeletePlaceConfirm] = useState({ isOpen: false, card: {} });
   const [selectedCard, setSelectedCard] = useState(null);
 
   /**стейт кнопок сабмита форм
@@ -55,26 +61,55 @@ function App() {
     setSubmitButtonState({ text: 'Регистрация', disabled: true });
     register(email, password)
       .then((res) => {
-        //setCurrentUserAccount(old=>({...old, email: res.email}));
         console.log(`Электронная почта ${res.data.email} зарегистрирована`);
-        setRegInfo({ isOpen: true, success: true, message: "Вы успешно\n зарегистрировались" });
-        //history.push('/sign-in');
+        setRegInfo({ success: true, message: "Вы успешно\n зарегистрировались" });
+        setIsInfoTooltipOpen(true);
       })
       .catch((err) => {
         console.log(`${err.status}\nНе удалось зарегистрировать электронную почту ${email}\n Попробуйте ещё раз`);
-        setRegInfo({ isOpen: true, success: false, message: "Что-то пошло не так!\n Попробуйте еще раз." });
+        setRegInfo({ success: false, message: "Что-то пошло не так!\n Попробуйте еще раз." });
+        setIsInfoTooltipOpen(true);
       })
       .finally(() => {
         setSubmitButtonState({ text: 'Зарегистрироваться', disabled: false });
       });
   };
-  const handleLogin = () => {
-
+  const handleLogin = (email, password) => {
+    setSubmitButtonState({ text: 'Попытка входа', disabled: true });
+    authorize(email, password)
+      .then(res => {
+        localStorage.setItem('jwt', res.token);
+        //если получен токен, значит указанный email верный и его можно сохранить в стейт
+        setCurrentUserAccount({ loggedIn: true, email });
+      })
+      .catch(err => {
+        switch (err.status) {
+          case 400:
+            console.log('Не передано одно из полей');
+            break;
+          case 401:
+            console.log(`пользователь с ${email} не найден`);
+            break;
+          default:
+            console.log('Не удалось войти');
+        }
+      })
+      .finally(() => {
+        setSubmitButtonState({ text: 'Войти', disabled: false });
+      });
   };
 
-  const handleRegisterOpen = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    history.push('/sign-in');
+  };
+  const handleLoginOpen = useCallback(() => {
+    setSubmitButtonState({ text: 'Войти', disabled: true });
+  }, []);
+
+  const handleRegisterOpen = useCallback(() => {
     setSubmitButtonState({ text: 'Зарегистрироваться', disabled: true });
-  };
+  }, []);
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -100,17 +135,14 @@ function App() {
     setSelectedCard(card);
   };
 
-  const closeAllPopups = () => {
+  const closeAllPopups = useCallback(() => {
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setDeletePlaceConfirm({ isOpen: false, card: {} });
     setSelectedCard(null);
-    if (regInfo.success) {
-      history.push('/sign-in');
-    }
-    setRegInfo({ isOpen: false, success: false, message: '' });  
-  };
+    setIsInfoTooltipOpen(false);
+  }, []);
 
   /*обработчик закрытия попапа по нажатию на фон*/
   const handlePopupBGClick = (evt) => {
@@ -123,7 +155,7 @@ function App() {
     if (evt.keyCode === 27) {
       closeAllPopups();
     }
-  }, []);
+  }, [closeAllPopups]);
 
   const handleUpdateUser = (objUserInfo) => {
     setSubmitButtonState({ text: 'Сохранение', disabled: true });
@@ -231,10 +263,9 @@ function App() {
       if (localStorage.getItem('jwt')) {
         const jwt = localStorage.getItem('jwt');
         validateToken(jwt)
-          .then(data => {
-            if (data) {
-              setCurrentUserAccount({ loggedIn: true, email: data.email });
-              history.push('/');
+          .then(res => {
+            if (res) {
+              setCurrentUserAccount({ loggedIn: true, email: res.data.email });
             }
           })
           .catch(err => {
@@ -246,11 +277,17 @@ function App() {
                 console.log('Переданный токен некорректен');
                 break;
               default:
+                console.log('Не удалось проверить токен');
             };
-            history.push('/sign-in');
+          })
+          .finally(() => {
+            isTokenCheckFinished.current = true;
           });
+      } else {
+        isTokenCheckFinished.current = true;
       }
     };
+    checkLoggedIn();
     Promise.all([
       api.getUserInfo(),
       api.loadLocations()
@@ -261,24 +298,39 @@ function App() {
       }).catch(err => {
         console.log(err.status);
         alert(`Ошибка загрузки данных:\n ${err.status}\n ${err.statusText}`);
+      })
+      .finally(() => {
+        isUserDataLoaded.current = true;
       });
-    checkLoggedIn();
   }, []);
 
   useEffect(() => {
     if (currentUserAccount.loggedIn) history.push('/');
-  }, [currentUserAccount.loggedIn, history]);
+  }, [currentUserAccount, history]);
 
   useEffect(() => {
-    if (regInfo.isOpen || isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || deletePlaceConfirm.isOpen || selectedCard) {
+    if (!isInfoTooltipOpen)
+      setTimeout(() => {
+        setRegInfo({ success: false, message: '' });
+      }, 500);
+
+  }, [isInfoTooltipOpen]);
+
+  useEffect(() => {
+    if (regInfo.success) {
+      history.push('/sign-in');
+    }
+  }, [regInfo.success, history]);
+
+  useEffect(() => {
+    if (isInfoTooltipOpen || isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || deletePlaceConfirm.isOpen || selectedCard) {
       document.addEventListener('keydown', handleKeyDown);
     } else {
       document.removeEventListener('keydown', handleKeyDown);
     }
-  }, [regInfo.isOpen, isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen, deletePlaceConfirm.isOpen, selectedCard, handleKeyDown]);
+  }, [isInfoTooltipOpen, isEditAvatarPopupOpen, isEditProfilePopupOpen, isAddPlacePopupOpen, deletePlaceConfirm.isOpen, selectedCard, handleKeyDown]);
 
   return (
-
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Switch>
@@ -291,7 +343,9 @@ function App() {
             <Login
               name="login"
               title="Вход"
+              onOpen={handleLoginOpen}
               onSubmit={handleLogin}
+              onFormValidate={handleFormValidate}
               buttonState={submitButtonState}
             />
           </Route>
@@ -314,26 +368,40 @@ function App() {
               </Link>
             </Register>
           </Route>
-          <ProtectedRoute path="/" loggedIn={currentUserAccount.loggedIn}>
-            <Header>
-              <Link to="/sign-in" className="nav-bar__link">
-                Войти
-              </Link>
-            </Header>
-            <Main
-              cards={cards}
-              onEditProfile={handleEditProfileClick}
-              onEditAvatar={handleEditAvatarClick}
-              onNewLocation={handleAddPlaceClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onDeleteClick={handleDeleteClick}
-            />
-            <Footer />
-          </ProtectedRoute>
+          {isTokenCheckFinished.current ?
+            <>
+              <ProtectedRoute exact path="/" loggedIn={currentUserAccount.loggedIn}>
+                <Header>
+                  <p className="nav-bar__user-name">{currentUserAccount.email}</p>
+                  <button
+                    className="nav-bar__button"
+                    onClick={handleLogout}
+                  >
+                    Выйти
+                  </button>
+                </Header>
+                {isUserDataLoaded.current ?
+                  <>
+                    <Main
+                      cards={cards}
+                      onEditProfile={handleEditProfileClick}
+                      onEditAvatar={handleEditAvatarClick}
+                      onNewLocation={handleAddPlaceClick}
+                      onCardClick={handleCardClick}
+                      onCardLike={handleCardLike}
+                      onDeleteClick={handleDeleteClick}
+                    />
+                  </> :
+                  <></>
+                }
+                <Footer />
+              </ProtectedRoute>
+            </> :
+            <></>
+          }
         </Switch>
         <InfoTooltip
-          isOpen={regInfo.isOpen}
+          isOpen={isInfoTooltipOpen}
           success={regInfo.success}
           message={regInfo.message}
           onClose={closeAllPopups}

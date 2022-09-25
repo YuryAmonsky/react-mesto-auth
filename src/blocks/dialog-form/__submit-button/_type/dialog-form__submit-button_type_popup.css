@@ -9,6 +9,10 @@
   margin-top: 38px;
 }
 
+.dialog-form__submit-button_type_popup:hover {
+  opacity: .8; 
+}
+
 @media screen and (max-width: 619px) {
   .dialog-form__submit-button_type_popup {
     margin-top: 45px;

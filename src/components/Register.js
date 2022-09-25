@@ -6,17 +6,17 @@ function Register({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { validity, cbResetValidator, cbFormValidate } = useFormValidator('register', onFormValidate);
-  
+
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
     cbFormValidate(evt);
   }
-  
+
   const handlePasswordChange = (evt) => {
     setPassword(evt.target.value);
     cbFormValidate(evt);
   }
-  
+
   const handleEmailBlur = (evt) => {
     cbFormValidate(evt);
   }
@@ -36,7 +36,7 @@ function Register({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
   useEffect(() => {
     cbResetValidator(true, false);
     onOpen();
-  }, []);
+  }, [cbResetValidator, onOpen]);
 
   return (
     <div className="form-container">

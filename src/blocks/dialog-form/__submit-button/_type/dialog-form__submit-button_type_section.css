@@ -1,5 +1,9 @@
-.dialog-form__submit-button_type_section{
-  margin-top: 216px;  
+.dialog-form__submit-button_type_section {
+  margin-top: 216px;
   background-color: #fff;
-  color: #000;  
+  color: #000;
+}
+
+.dialog-form__submit-button_type_section:hover {
+  opacity: .85;
 }
