@@ -48,22 +48,21 @@ const useFormValidator = (formName, cbToggleButton) => {
       });
     }
   };
-  const getFormInputsValidity = (shouldShowError)=>{
+  const getFormInputsValidity = useCallback((shouldShowError)=>{
     const formElements = Array.from(document.forms.namedItem(formName).elements);
     const inputs = formElements.filter(element=>['text','url', 'password', 'email'].includes(element.type));
     return inputs.reduce((obj, input) =>
       ({...obj, [input.name]: {valid: input.validity.valid, error: input.validationMessage, shouldShowError: shouldShowError}}),
     {});
-  }
+  },[formName]);
+  
   const cbResetValidator = useCallback((isOpen, isValid) => {
     isPopupOpen.current = isOpen;
     isInitialState.current = true;
     setIsFormValid(isValid);   
     setValidity({...getFormInputsValidity(!isInitialState.current)});
-  }, []);
-
-  useEffect(()=>{    
-  },[]);
+  }, [getFormInputsValidity]);
+ 
   /**показ ошибки при отсутствии ввода в инпут текстового типа в течение 5сек 
    * после предыдущего ввода в случае невалидного значения инпута
   */

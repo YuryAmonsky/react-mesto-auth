@@ -152,7 +152,7 @@ function App() {
   };
   /*обработчик закрытия попапа по нажатию Esc*/
   const handleKeyDown = useCallback((evt) => {
-    if (evt.keyCode === 27) {
+    if (evt.key === 'Escape') {
       closeAllPopups();
     }
   }, [closeAllPopups]);

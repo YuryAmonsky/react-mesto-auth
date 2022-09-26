@@ -25,8 +25,7 @@ function PopupWithForm({ title, name, isOpen, onClose, onSubmit, onBGClick, butt
           </h2>
           {children}
           <button
-            className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_popup dialog-form__submit-button_disabled"
-              : "dialog-form__submit-button dialog-form__submit-button_type_popup"}
+            className={`dialog-form__submit-button dialog-form__submit-button_type_popup ${buttonState.disabled ? "dialog-form__submit-button_disabled": ""}`}
             type="submit"
             name="submitButton"
             formMethod="post"

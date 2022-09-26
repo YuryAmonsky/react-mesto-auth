@@ -56,6 +56,7 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
           id="email"
           type="email"
           placeholder="Email"
+          value={email}
           minLength="9"
           maxLength="50"
           required
@@ -73,6 +74,7 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
           id="password"
           type="password"
           placeholder="Пароль"
+          value={password}
           minLength="8"
           maxLength="200"
           required
