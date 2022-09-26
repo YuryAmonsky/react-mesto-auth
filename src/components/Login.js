@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import useFormValidator from "../hooks/useFormValidator";
+import React from 'react';
+import AuthForm from './AuthForm';
 
-function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
+function Login(props) {
+
+ return <AuthForm {...props} isRegForm={false}/>
+/*  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { validity, cbResetValidator, cbFormValidate } = useFormValidator('login', onFormValidate);
@@ -97,7 +100,7 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
         </button>
       </form>
     </div>
-  );
+  );*/
 }
 
 export default Login;

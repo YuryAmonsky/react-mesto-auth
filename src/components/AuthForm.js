@@ -1,12 +1,10 @@
-import React from 'react';
-import AuthForm from './AuthForm';
+import React, { useEffect, useState } from 'react';
+import useFormValidator from "../hooks/useFormValidator";
 
-function Register(props) {
-  return <AuthForm {...props} isRegForm={true} />
-  /*
+function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, isRegForm, children }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('register', onFormValidate);
+  const { validity, cbResetValidator, cbFormValidate } = useFormValidator(name, onFormValidate);
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
@@ -38,14 +36,13 @@ function Register(props) {
     cbResetValidator(true, false);
     onOpen();
   }, [cbResetValidator, onOpen]);
-
   return (
     <div className="form-container">
 
       <form
         className="dialog-form dialog-form_type_section"
         name={name}
-        id="register"
+        id={name}
         onSubmit={handleSubmit}
         noValidate
       >
@@ -60,7 +57,7 @@ function Register(props) {
           type="email"
           placeholder="Email"
           value={email}
-          minLength="9"
+          minLength="8"
           maxLength="50"
           required
           autoComplete="off"
@@ -85,7 +82,7 @@ function Register(props) {
           onInput={handlePasswordChange}
           onBlur={handlePasswordBlur}
         />
-        <span className="dialog-form__input-error">
+        <span className="dialog-form__input-error input-edit-profile-about-me-error">
           {validity.password?.shouldShowError ? validity.password?.error : ""}
         </span>
         <button
@@ -98,13 +95,17 @@ function Register(props) {
         >
           {buttonState.text}
         </button>
-        <div className="dialog-form__redirect">
-          <p>Уже зарегистрированы?</p>
-          {children}
-        </div>
+        {isRegForm ? 
+          <div className="dialog-form__redirect">
+            <p>Уже зарегистрированы?</p>
+            {children}
+          </div>
+        : 
+          <></>
+        }
       </form>
     </div>
-  );*/
-}
+  );
+} 
 
-export default Register;
+export default AuthForm;
