@@ -4,7 +4,7 @@ import useFormValidator from "../hooks/useFormValidator";
 
 function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProps }) {
   const avatarLink = useRef();
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('edit-profile', onFormValidate);
+  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('edit-avatar', onFormValidate);
 
   const handleLinkChange = (evt) => {
     cbFormValidate(evt);
@@ -31,6 +31,7 @@ function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProp
     <PopupWithForm
       title="Обновить аватар"
       name="edit-avatar"
+      id="edit-avatar"
       isOpen={isOpen}
       onSubmit={handleSubmit}
       {...commonProps}

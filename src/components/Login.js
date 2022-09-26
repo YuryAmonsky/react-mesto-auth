@@ -42,6 +42,7 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
       <form
         className="dialog-form dialog-form_type_section"
         name={name}
+        id="login"
         onSubmit={handleSubmit}
         noValidate
       >
@@ -53,17 +54,17 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
             : "dialog-form__input dialog-form__input_type_section"}
           name="email"
           id="email"
-          type="text"
+          type="email"
           placeholder="Email"
-          minLength="2"
-          maxLength="40"
+          minLength="9"
+          maxLength="50"
           required
           autoComplete="off"
           onInput={handleEmailChange}
           onBlur={handleEmailBlur}
         />
         <span className="dialog-form__input-error">
-
+          {validity.email?.shouldShowError ? validity.email?.error : ""}
         </span>
         <input
           className={validity.password?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
@@ -80,7 +81,7 @@ function Login({ title, name, onOpen, onSubmit, onFormValidate, buttonState }) {
           onBlur={handlePasswordBlur}
         />
         <span className="dialog-form__input-error input-edit-profile-about-me-error">
-
+          {validity.password?.shouldShowError ? validity.password?.error : ""}
         </span>
         <button
           className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_section dialog-form__submit-button_disabled"

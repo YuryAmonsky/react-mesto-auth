@@ -10,7 +10,7 @@ const useFormValidator = (formName, cbToggleButton) => {
   const isPopupOpen = useRef(false);
   /**isInitialState используется, 
    * для срабатывания эффектов только в определенных ситуациях*/
-  const isInitialState = useRef(true);
+  const isInitialState = useRef(true);  
   const currentInputName = useRef();
   const timer = useRef(0);
   const wasInputEvent = useRef(false);
@@ -48,12 +48,22 @@ const useFormValidator = (formName, cbToggleButton) => {
       });
     }
   };
+  const getFormInputsValidity = (shouldShowError)=>{
+    const formElements = Array.from(document.forms.namedItem(formName).elements);
+    const inputs = formElements.filter(element=>['text','url', 'password', 'email'].includes(element.type));
+    return inputs.reduce((obj, input) =>
+      ({...obj, [input.name]: {valid: input.validity.valid, error: input.validationMessage, shouldShowError: shouldShowError}}),
+    {});
+  }
   const cbResetValidator = useCallback((isOpen, isValid) => {
     isPopupOpen.current = isOpen;
     isInitialState.current = true;
-    setIsFormValid(isValid);
-    setValidity({});
+    setIsFormValid(isValid);   
+    setValidity({...getFormInputsValidity(!isInitialState.current)});
   }, []);
+
+  useEffect(()=>{    
+  },[]);
   /**показ ошибки при отсутствии ввода в инпут текстового типа в течение 5сек 
    * после предыдущего ввода в случае невалидного значения инпута
   */
@@ -76,8 +86,13 @@ const useFormValidator = (formName, cbToggleButton) => {
         wasInputEvent.current = false;
         timer.current = setTimeout(() => { cbCheckInputCompletion(currentInputName.current) }, 5000);
       }
-      const inputs = Object.values(validity);
-      const isValid = inputs.every((input) => { return input.valid; });
+      const inputs = Object.values(validity);      
+      const isValid = inputs.every((input) => { return input.valid; });       
+      //const inputs = Array.from(form.elements);
+      //const isValid = inputs.every((input) => { return input.validity? input.validity.valid: true; });
+      //const isValid = inputs.every((input) => { 
+      //  console.log(`${input.name} ${input.validity.valid}`);
+      //  return input.checkValidity(); });
       setIsFormValid(isValid);
     }
   }, [validity]);

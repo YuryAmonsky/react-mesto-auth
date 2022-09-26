@@ -5,7 +5,7 @@ import useFormValidator from "../hooks/useFormValidator";
 function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('edit-profile', onFormValidate);
+  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('new-location', onFormValidate);
   const handleNameChange = (evt) => {
     setName(evt.target.value);
     cbFormValidate(evt)
@@ -43,6 +43,7 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
     <PopupWithForm
       title="Новое место"
       name="new-location"
+      id="new-location"
       isOpen={isOpen}
       onSubmit={handleAddPlaceSubmit}
       {...commonProps}

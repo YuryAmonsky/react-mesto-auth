@@ -44,6 +44,7 @@ function Register({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
       <form
         className="dialog-form dialog-form_type_section"
         name={name}
+        id="register"
         onSubmit={handleSubmit}
         noValidate
       >
@@ -55,11 +56,11 @@ function Register({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
             : "dialog-form__input dialog-form__input_type_section"}
           name="email"
           id="email"
-          type="text"
+          type="email"
           placeholder="Email"
           value={email}
-          minLength="2"
-          maxLength="40"
+          minLength="9"
+          maxLength="50"
           required
           autoComplete="off"
           onInput={handleEmailChange}

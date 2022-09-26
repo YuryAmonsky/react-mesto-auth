@@ -49,6 +49,7 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
     <PopupWithForm
       title="Редактировать профиль"
       name="edit-profile"
+      id="edit-profile"
       isOpen={isOpen}
       onSubmit={handleSubmit}
       {...commonProps}
