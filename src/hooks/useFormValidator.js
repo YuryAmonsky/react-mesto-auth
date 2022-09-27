@@ -7,28 +7,30 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const useFormValidator = (formName, cbToggleButton) => {
-  const isPopupOpen = useRef(false);
+  const isFormOpen = useRef(false);
   /**isInitialState используется, 
    * для срабатывания эффектов только в определенных ситуациях*/
-  const isInitialState = useRef(true);  
+  const isInitialState = useRef(true);
   const currentInputName = useRef();
   const timer = useRef(0);
   const wasInputEvent = useRef(false);
   const [isFormValid, setIsFormValid] = useState(true);
-  const [validity, setValidity] = useState({});
+  const [inputs, setInputs] = useState({});
 
   const cbFormValidate = (evt) => {
     currentInputName.current = evt.target.name;
+    const value = evt.target.value;
     const isInputValid = evt.target.validity.valid;
     const error = evt.target.validationMessage;
-    const input = validity[currentInputName.current];
+    const input = inputs[currentInputName.current];
     if (evt.type === 'input') {
       if (isInitialState.current) isInitialState.current = false;
       wasInputEvent.current = true;
       const shouldShow = input ? input.shouldShowError && !isInputValid : false;
-      setValidity({
-        ...validity,
+      setInputs({
+        ...inputs,
         [currentInputName.current]: {
+          value,
           valid: isInputValid,
           error: error,
           shouldShowError: shouldShow
@@ -38,9 +40,10 @@ const useFormValidator = (formName, cbToggleButton) => {
     if (evt.type === 'blur') {
       clearTimeout(timer.current);
       wasInputEvent.current = false;
-      setValidity({
-        ...validity,
+      setInputs({
+        ...inputs,
         [currentInputName.current]: {
+          value,
           valid: isInputValid,
           error: error,
           shouldShowError: !isInputValid
@@ -48,45 +51,45 @@ const useFormValidator = (formName, cbToggleButton) => {
       });
     }
   };
-  const getFormInputsValidity = useCallback((shouldShowError)=>{
+  const getFormInputsState = useCallback((shouldShowError) => {
     const formElements = Array.from(document.forms.namedItem(formName).elements);
-    const inputs = formElements.filter(element=>['text','url', 'password', 'email'].includes(element.type));
-    return inputs.reduce((obj, input) =>
-      ({...obj, [input.name]: {valid: input.validity.valid, error: input.validationMessage, shouldShowError: shouldShowError}}),
-    {});
-  },[formName]);
-  
+    const items = formElements.filter(element => ['text', 'url', 'password', 'email'].includes(element.type));
+    return items.reduce((obj, input) =>
+      ({ ...obj, [input.name]: { value: input.value, valid: input.validity.valid, error: input.validationMessage, shouldShowError: shouldShowError } }),
+      {});
+  }, [formName]);
+
   const cbResetValidator = useCallback((isOpen, isValid) => {
-    isPopupOpen.current = isOpen;
+    isFormOpen.current = isOpen;
     isInitialState.current = true;
-    setIsFormValid(isValid);   
-    setValidity({...getFormInputsValidity(!isInitialState.current)});
-  }, [getFormInputsValidity]);
- 
+    setIsFormValid(isValid);
+    setInputs({ ...getFormInputsState(!isInitialState.current) });
+  }, [getFormInputsState]);
+
   /**показ ошибки при отсутствии ввода в инпут текстового типа в течение 5сек 
    * после предыдущего ввода в случае невалидного значения инпута
   */
   useEffect(() => {
     const cbCheckInputCompletion = (inputName) => {
-      const input = validity[inputName];
+      const input = inputs[inputName];
       const shouldShow = input ? !input.valid : true;
-      setValidity({
-        ...validity,
+      setInputs({
+        ...inputs,
         [inputName]:
-        {          
+        {
           ...input,
           shouldShowError: shouldShow
         }
       });
     }
-    if (isPopupOpen.current && !isInitialState.current) {
+    if (isFormOpen.current && !isInitialState.current) {
       clearTimeout(timer.current);
       if (wasInputEvent.current) {
         wasInputEvent.current = false;
         timer.current = setTimeout(() => { cbCheckInputCompletion(currentInputName.current) }, 5000);
       }
-      const inputs = Object.values(validity);      
-      const isValid = inputs.every((input) => { return input.valid; });       
+      const items = Object.values(inputs);
+      const isValid = items.every((input) => { return input.valid; });
       //const inputs = Array.from(form.elements);
       //const isValid = inputs.every((input) => { return input.validity? input.validity.valid: true; });
       //const isValid = inputs.every((input) => { 
@@ -94,13 +97,13 @@ const useFormValidator = (formName, cbToggleButton) => {
       //  return input.checkValidity(); });
       setIsFormValid(isValid);
     }
-  }, [validity]);
+  }, [inputs]);
 
   useEffect(() => {
     cbToggleButton(isFormValid, formName);
   }, [isFormValid, formName, cbToggleButton]);
 
-  return { validity, cbResetValidator, cbFormValidate };
+  return { inputs, setInputs, cbResetValidator, cbFormValidate };
 }
 
 export default useFormValidator;

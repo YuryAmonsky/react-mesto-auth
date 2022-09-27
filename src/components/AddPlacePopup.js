@@ -1,43 +1,40 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import PopupWithForm from './PopupWithForm';
 import useFormValidator from "../hooks/useFormValidator";
 
-function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
-  const [name, setName] = useState('');
-  const [link, setLink] = useState('');
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('new-location', onFormValidate);
-  const handleNameChange = (evt) => {
-    setName(evt.target.value);
-    cbFormValidate(evt)
-  }
-
-  const handleLinkChange = (evt) => {
-    setLink(evt.target.value);
-    cbFormValidate(evt);
-  }
-
-  const handleNameBlur = (evt) => {
-    cbFormValidate(evt)
-  }
-
-  const handleLinkBlur = (evt) => {
-    cbFormValidate(evt)
-  }
-
+function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {  
+  const { inputs, setInputs, cbResetValidator, cbFormValidate } = useFormValidator('new-location', onFormValidate);
+  
   const handleAddPlaceSubmit = (evt) => {
     evt.preventDefault();
-    onAddPlace({ name, link });
+    onAddPlace({ name: inputs?.name.value, link: inputs?.link.value });
   }
 
   /**Инициализация инпутов при закрытии попапа*/
   useEffect(() => {
-    if (!isOpen) {
-      setName('');
-      setLink('');
+    if (!isOpen) {      
+      setInputs(
+        {
+          name: 
+          {
+            value: '',
+            valid: false,
+            error: '',
+            shouldShowError: false
+          },
+          link:
+          {
+            value: '',
+            valid: false,
+            error: '',
+            shouldShowError: false
+          }
+        }
+      );
     } else {
       cbResetValidator(isOpen, false);
     }
-  }, [isOpen, cbResetValidator]);
+  }, [isOpen, setInputs, cbResetValidator]);
 
   return (
     <PopupWithForm
@@ -49,42 +46,42 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
       {...commonProps}
     >
       <input
-        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+        className={inputs?.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid"
           : "dialog-form__input dialog-form__input_type_popup"}
         name="name"
         id="input-new-location-name"
         type="text"
         placeholder="Название"
-        value={name}
+        value={inputs?.name?.value}
         minLength="2"
         maxLength="30"
         required
         autoComplete="off"
-        onInput={handleNameChange}
-        onBlur={handleNameBlur}
+        onInput={cbFormValidate}
+        onBlur={cbFormValidate}
       />
       <span
         className="dialog-form__input-error"
       >
-        {validity.name?.shouldShowError ? validity.name?.error : ""}
+        {inputs?.name?.shouldShowError ? inputs.name?.error : ""}
       </span>
       <input
-        className={validity.link?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+        className={inputs?.link?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid"
           : "dialog-form__input dialog-form__input_type_popup"}
         name="link"
         id="input-new-location-link"
         type="url"
         placeholder="Ссылка на картинку"
-        value={link}
+        value={inputs?.link?.value}
         required
         autoComplete="off"
-        onInput={handleLinkChange}
-        onBlur={handleLinkBlur}
+        onInput={cbFormValidate}
+        onBlur={cbFormValidate}
       />
       <span
         className="dialog-form__input-error"
       >
-        {validity.link?.shouldShowError ? validity.link?.error : ""}
+        {inputs?.link?.shouldShowError ? inputs?.link?.error : ""}
       </span>
     </PopupWithForm>
   );

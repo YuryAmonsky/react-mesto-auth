@@ -1,49 +1,42 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import useFormValidator from "../hooks/useFormValidator";
 
 function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps }) {
   const currentUser = useContext(CurrentUserContext);
-
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('edit-profile', onFormValidate);
-  const handleNameChange = (evt) => {
-    setName(evt.target.value);
-    cbFormValidate(evt);
-  }
-
-  const handleDescriptionChange = (evt) => {
-    setDescription(evt.target.value);
-    cbFormValidate(evt);
-  }
-
-  const handleNameBlur = (evt) => {
-    cbFormValidate(evt);
-  }
-
-  const handleDescriptionBlur = (evt) => {
-    cbFormValidate(evt);
-  }
-
+  const { inputs, setInputs, cbResetValidator, cbFormValidate } = useFormValidator('edit-profile', onFormValidate);
+  
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    onUpdateUser({
-      name,
-      about: description,
-    });
+    onUpdateUser({ name: inputs?.name.value, about: inputs?.aboutMe.value });
   }
 
   /**Инициализация инпутов при закрытии попапа значениями из currentUser */
   useEffect(() => {
-    if (!isOpen) {
-      setName(currentUser.name);
-      setDescription(currentUser.about);
+    if (!isOpen) {      
+      setInputs(
+        {
+          name: 
+          {
+            value: currentUser.name,
+            valid: true,
+            error: '',
+            shouldShowError: false
+          },
+          aboutMe:
+          {
+            value: currentUser.about,
+            valid: true,
+            error: '',
+            shouldShowError: false
+          }
+        }
+      );
     } else {
       cbResetValidator(isOpen, true);
     }
-  }, [isOpen, currentUser, cbResetValidator]);
+  }, [isOpen, currentUser, setInputs, cbResetValidator]);
 
   return (
     <PopupWithForm
@@ -55,38 +48,38 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
       {...commonProps}
     >
       <input
-        className={validity.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+        className={inputs?.name?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid"
           : "dialog-form__input dialog-form__input_type_popup"}
         name="name"
         id="input-edit-profile-name"
         type="text" placeholder="Имя"
-        value={name}
+        value={inputs?.name?.value}
         minLength="2"
         maxLength="40"
         required
         autoComplete="off"
-        onInput={handleNameChange}
-        onBlur={handleNameBlur}
+        onInput={cbFormValidate}
+        onBlur={cbFormValidate}
       />
       <span className="dialog-form__input-error input-edit-profile-name-error">
-        {validity.name?.shouldShowError ? validity.name?.error : ""}
+        {inputs?.name?.shouldShowError ? inputs?.name?.error : ""}
       </span>
       <input
-        className={validity.aboutMe?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+        className={inputs?.aboutMe?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid"
           : "dialog-form__input dialog-form__input_type_popup"}
         name="aboutMe"
         id="input-edit-profile-about-me"
         type="text" placeholder="О себе"
-        value={description}
+        value={inputs?.aboutMe?.value}
         minLength="2"
         maxLength="200"
         required
         autoComplete="off"
-        onInput={handleDescriptionChange}
-        onBlur={handleDescriptionBlur}
+        onInput={cbFormValidate}
+        onBlur={cbFormValidate}
       />
       <span className="dialog-form__input-error input-edit-profile-about-me-error">
-        {validity.aboutMe?.shouldShowError ? validity.aboutMe?.error : ""}
+        {inputs?.aboutMe?.shouldShowError ? inputs?.aboutMe?.error : ""}
       </span>
     </PopupWithForm>
   );

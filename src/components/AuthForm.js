@@ -1,34 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import useFormValidator from "../hooks/useFormValidator";
 
-function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, isRegForm, children }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator(name, onFormValidate);
-
-  const handleEmailChange = (evt) => {
-    setEmail(evt.target.value);
-    cbFormValidate(evt);
-  }
-
-  const handlePasswordChange = (evt) => {
-    setPassword(evt.target.value);
-    cbFormValidate(evt);
-  }
-
-  const handleEmailBlur = (evt) => {
-    cbFormValidate(evt);
-  }
-
-  const handlePasswordBlur = (evt) => {
-    cbFormValidate(evt);
-  }
+function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, isRegForm, children }) {  
+  const { inputs, cbResetValidator, cbFormValidate } = useFormValidator(name, onFormValidate);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onSubmit(
-      email,
-      password
+      inputs.email?.value,
+      inputs.password?.value
     );
   }
 
@@ -36,6 +16,7 @@ function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
     cbResetValidator(true, false);
     onOpen();
   }, [cbResetValidator, onOpen]);
+
   return (
     <div className="form-container">
 
@@ -50,40 +31,40 @@ function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
           {title}
         </h2>
         <input
-          className={validity.email?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
+          className={inputs?.email?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
             : "dialog-form__input dialog-form__input_type_section"}
           name="email"
           id="email"
           type="email"
           placeholder="Email"
-          value={email}
+          value={inputs?.email?.value}
           minLength="8"
           maxLength="50"
           required
           autoComplete="off"
-          onInput={handleEmailChange}
-          onBlur={handleEmailBlur}
+          onInput={cbFormValidate}
+          onBlur={cbFormValidate}
         />
         <span className="dialog-form__input-error">
-          {validity.email?.shouldShowError ? validity.email?.error : ""}
+          {inputs?.email?.shouldShowError ? inputs?.email?.error : ""}
         </span>
         <input
-          className={validity.password?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
+          className={inputs?.password?.shouldShowError ? "dialog-form__input dialog-form__input_type_section dialog-form__input_invalid"
             : "dialog-form__input dialog-form__input_type_section"}
           name="password"
           id="password"
           type="password"
           placeholder="Пароль"
-          value={password}
+          value={inputs?.password?.value}
           minLength="8"
           maxLength="200"
           required
           autoComplete="off"
-          onInput={handlePasswordChange}
-          onBlur={handlePasswordBlur}
+          onInput={cbFormValidate}
+          onBlur={cbFormValidate}
         />
         <span className="dialog-form__input-error input-edit-profile-about-me-error">
-          {validity.password?.shouldShowError ? validity.password?.error : ""}
+          {inputs?.password?.shouldShowError ? inputs?.password?.error : ""}
         </span>
         <button
           className={buttonState.disabled ? "dialog-form__submit-button dialog-form__submit-button_type_section dialog-form__submit-button_disabled"

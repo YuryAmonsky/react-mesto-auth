@@ -4,15 +4,8 @@ import useFormValidator from "../hooks/useFormValidator";
 
 function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProps }) {
   const avatarLink = useRef();
-  const { validity, cbResetValidator, cbFormValidate } = useFormValidator('edit-avatar', onFormValidate);
-
-  const handleLinkChange = (evt) => {
-    cbFormValidate(evt);
-  }
-
-  const handleLinkBlur = (evt) => {
-    cbFormValidate(evt);
-  }
+  const { inputs, cbResetValidator, cbFormValidate } = useFormValidator('edit-avatar', onFormValidate);
+  
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onUpdateAvatar(avatarLink.current.value);
@@ -38,7 +31,7 @@ function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProp
     >
       <input
         ref={avatarLink}
-        className={validity.avatar?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid" 
+        className={inputs?.avatar?.shouldShowError ? "dialog-form__input dialog-form__input_type_popup dialog-form__input_invalid"
           : "dialog-form__input dialog-form__input_type_popup"}
         name="avatar"
         id="input-edit-avatar"
@@ -46,13 +39,13 @@ function EditAvatarPopup({ isOpen, onUpdateAvatar, onFormValidate, ...commonProp
         placeholder="Ссылка на картинку"
         required
         autoComplete="off"
-        onInput={handleLinkChange}
-        onBlur={handleLinkBlur}
+        onInput={cbFormValidate}
+        onBlur={cbFormValidate}
       />
       <span
         className="dialog-form__input-error input-edit-avatar-error"
       >
-        {validity.avatar?.shouldShowError ? validity.avatar?.error : ""}
+        {inputs?.avatar?.shouldShowError ? inputs?.avatar?.error : ""}
       </span>
     </PopupWithForm>
   );
