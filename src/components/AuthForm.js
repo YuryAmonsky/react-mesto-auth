@@ -37,7 +37,7 @@ function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
           id="email"
           type="email"
           placeholder="Email"
-          value={inputs?.email?.value}
+          value={inputs?.email?.value || ""}
           minLength="8"
           maxLength="50"
           required
@@ -55,7 +55,7 @@ function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
           id="password"
           type="password"
           placeholder="Пароль"
-          value={inputs?.password?.value}
+          value={inputs?.password?.value || ""}
           minLength="8"
           maxLength="200"
           required

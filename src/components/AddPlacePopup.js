@@ -52,7 +52,7 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
         id="input-new-location-name"
         type="text"
         placeholder="Название"
-        value={inputs?.name?.value}
+        value={inputs?.name?.value || ""}
         minLength="2"
         maxLength="30"
         required
@@ -72,7 +72,7 @@ function AddPlacePopup({ isOpen, onAddPlace, onFormValidate, ...commonProps }) {
         id="input-new-location-link"
         type="url"
         placeholder="Ссылка на картинку"
-        value={inputs?.link?.value}
+        value={inputs?.link?.value || ""}
         required
         autoComplete="off"
         onInput={cbFormValidate}

@@ -53,7 +53,7 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
         name="name"
         id="input-edit-profile-name"
         type="text" placeholder="Имя"
-        value={inputs?.name?.value}
+        value={inputs?.name?.value || ""}
         minLength="2"
         maxLength="40"
         required
@@ -70,7 +70,7 @@ function EditProfilePopup({ isOpen, onUpdateUser, onFormValidate, ...commonProps
         name="aboutMe"
         id="input-edit-profile-about-me"
         type="text" placeholder="О себе"
-        value={inputs?.aboutMe?.value}
+        value={inputs?.aboutMe?.value || ""}
         minLength="2"
         maxLength="200"
         required
