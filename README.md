@@ -23,7 +23,7 @@ Mesto - это фотохостинг, отображающий пользова
 
 ## Ссылки
 **Демо**
-* [https://yuryamonsky.github.io/react-mesto-auth/]https://yuryamonsky.github.io/react-mesto-auth/)  
+* [https://yuryamonsky.github.io/react-mesto-auth/](https://yuryamonsky.github.io/react-mesto-auth/)  
   
 **Макет**  
 * https://www.figma.com/file/5H3gsn5lIGPwzBPby9jAOo/JavaScript.-Sprint-12?node-id=4453%3A444  
