@@ -6,6 +6,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
+import BurgerNavBar from './BurgerNavBar';
 import Header from './Header';
 import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
@@ -44,6 +45,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [regInfo, setRegInfo] = useState({ success: false, message: '' });
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -110,6 +112,11 @@ function App() {
   const handleRegisterOpen = useCallback(() => {
     setSubmitButtonState({ text: 'Зарегистрироваться', disabled: true });
   }, []);
+
+  const handleBurgerOpen = () => {
+    setIsBurgerOpen(!isBurgerOpen);
+    ;
+  }
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -335,10 +342,12 @@ function App() {
       <div className="page">
         <Switch>
           <Route path="/sign-in" >
-            <Header>
-              <Link to="/sign-up" className="nav-bar__link">
-                Регистрация
-              </Link>
+            <Header isBurgerOpen={isBurgerOpen}>
+              <nav className="nav-bar">
+                <Link to="/sign-up" className="nav-bar__link">
+                  Регистрация
+                </Link>
+              </nav>
             </Header>
             <Login
               name="login"
@@ -350,10 +359,12 @@ function App() {
             />
           </Route>
           <Route path="/sign-up">
-            <Header>
-              <Link to="/sign-in" className="nav-bar__link">
-                Войти
-              </Link>
+            <Header isBurgerOpen={isBurgerOpen}>
+              <nav className="nav-bar">
+                <Link to="/sign-in" className="nav-bar__link">
+                  Войти
+                </Link>
+              </nav>
             </Header>
             <Register
               name="register"
@@ -371,14 +382,19 @@ function App() {
           {isTokenCheckFinished.current ?
             <>
               <ProtectedRoute exact path="/" loggedIn={currentUserAccount.loggedIn}>
-                <Header>
-                  <p className="nav-bar__user-name">{currentUserAccount.email}</p>
-                  <button
-                    className="nav-bar__button"
-                    onClick={handleLogout}
-                  >
-                    Выйти
-                  </button>
+                <BurgerNavBar
+                  isBurgerOpen={isBurgerOpen}
+                  userEmail={currentUserAccount.email}
+                  onButtonClick={handleLogout}>
+                </BurgerNavBar>
+                <Header >
+                  <nav className="nav-bar">
+                    <p className="nav-bar__user-name nav-bar__user-name_low-res-hidden">{currentUserAccount.email}</p>
+                    <button className="nav-bar__button nav-bar__button_low-res-hidden" onClick={handleLogout} type="button">
+                      Выйти
+                    </button>
+                    <button className={`burger-button ${isBurgerOpen ? "burger-button_is-open" : ""}`} onClick={handleBurgerOpen} type="button"></button>
+                  </nav>
                 </Header>
                 {isUserDataLoaded.current ?
                   <>

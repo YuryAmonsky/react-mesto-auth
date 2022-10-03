@@ -1,16 +1,16 @@
 .nav-bar {
+  position: relative;
   margin-top: 6px;
   width: 738px;
+  width: auto;
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
-  column-gap: 24px;
+
 }
 
 @media screen and (max-width: 880px) {
   .nav-bar {
-    width: auto;
-    padding-right: calc(30px - 30*(100vw - 320px)/560);
-    box-sizing: border-box;
+    
   }
 }

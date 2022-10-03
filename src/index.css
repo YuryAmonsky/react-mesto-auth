@@ -4,9 +4,15 @@
 @import url(./blocks/header/header.css);
 @import url(./blocks/nav-bar/nav-bar.css);
 @import url(./blocks/nav-bar/__user-name/nav-bar__user-name.css);
+@import url(./blocks/nav-bar/__user-name/_low-res-hidden/nav-bar__user-name_low-res-hidden.css);
 @import url(./blocks/nav-bar/__link/nav-bar__link.css);
 @import url(./blocks/nav-bar/__link/_type/nav-bar__link_type_pale.css);
 @import url(./blocks/nav-bar/__button/nav-bar__button.css);
+@import url(./blocks/nav-bar/__button/_low-res-hidden/nav-bar__button_low-res-hidden.css);
+@import url(./blocks/burger-nav-bar/burger-nav-bar.css);
+@import url(./blocks/burger-nav-bar/_is-open/burger-nav-bar_is-open.css);
+@import url(./blocks/burger-button/burger-button.css);
+@import url(./blocks/burger-button/_is-open/burger-button_is-open.css);
 @import url(./blocks/logo/logo.css);
 @import url(./blocks/content/content.css);
 @import url(./blocks/form-container/form-container.css);
