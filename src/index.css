@@ -11,6 +11,7 @@
 @import url(./blocks/content/content.css);
 @import url(./blocks/form-container/form-container.css);
 @import url(./blocks/dialog-form/__redirect/dialog-form__redirect.css);
+@import url(./blocks/dialog-form/__redirect-text/dialog-form__redirect-text.css);
 @import url(./blocks/dialog-form/__link/dialog-form__link.css);
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__avatar-container/profile__avatar-container.css);

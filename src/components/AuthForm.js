@@ -78,7 +78,7 @@ function AuthForm({ title, name, onOpen, onSubmit, onFormValidate, buttonState, 
         </button>
         {isRegForm ? 
           <div className="dialog-form__redirect">
-            <p>Уже зарегистрированы?</p>
+            <p className="dialog-form__redirect-text">Уже зарегистрированы?</p>
             {children}
           </div>
         : 

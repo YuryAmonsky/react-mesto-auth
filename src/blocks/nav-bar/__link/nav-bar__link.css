@@ -12,3 +12,10 @@
 .nav-bar__link:hover {
   opacity: 0.6
 }
+
+@media screen and (max-width: 880px) {
+  .nav-bar__link {
+    font-size: calc(14px + 4 * (100vw - 320px)/560);
+    line-height: calc(17px + 5 * (100vw - 320px)/560);
+  }
+}  

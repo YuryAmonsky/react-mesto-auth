@@ -16,7 +16,8 @@
 
 @media screen and (max-width: 619px) {
   .infotooltip {
-    padding: 0 calc(22px + 14 * (100vw - 320px) / 300);
-    width: calc(282px + 148 * (100vw - 320px) / 300);
+    padding: calc(50px + 10 * (100vw - 320px) / 300) calc(18px + 18 * (100vw - 320px) / 300);
+    width: calc(280px + 150 * (100vw - 320px) / 300);
+    gap: calc(40px - 8 * (10vw -320px)/300);
   }
 }

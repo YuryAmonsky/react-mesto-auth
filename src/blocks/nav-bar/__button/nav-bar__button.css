@@ -14,3 +14,10 @@
 .nav-bar__button:hover {
   cursor: pointer;
 }
+
+@media screen and (max-width: 880px) {
+  .nav-bar__button {
+    font-size: calc(14px + 4 * (100vw - 320px)/560);
+    line-height: calc(17px + 5 * (100vw - 320px)/560);
+  }
+}  

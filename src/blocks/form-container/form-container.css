@@ -7,3 +7,10 @@
   display: grid;
   grid-template-columns: 1fr min-content 1fr; 
 }
+
+@media screen and (max-width: 619px) {
+  .form-container {   
+    padding-top: calc(40px + 20 * (100vw - 320px) /300);
+    
+  }
+}
