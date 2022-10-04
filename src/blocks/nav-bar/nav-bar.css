@@ -6,11 +6,5 @@
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
-
-}
-
-@media screen and (max-width: 880px) {
-  .nav-bar {
-    
-  }
+  gap: 24px;
 }

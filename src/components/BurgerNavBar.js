@@ -15,4 +15,4 @@ function BurgerNavBar({isBurgerOpen, userEmail, onButtonClick}){
   )
 }
 
-export default BurgerNavBar
+export default BurgerNavBar;

@@ -103,6 +103,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
+    setIsBurgerOpen(!isBurgerOpen);
     history.push('/sign-in');
   };
   const handleLoginOpen = useCallback(() => {

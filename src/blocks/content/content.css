@@ -1,4 +1,4 @@
-.content {
+.content { 
   margin: 40px auto 0;
   width: 100%;
   align-self: stretch;
@@ -10,6 +10,5 @@
   .content {
     margin: 42px 19px 0;
     width: calc(100% - 38px);
-
   }
 }

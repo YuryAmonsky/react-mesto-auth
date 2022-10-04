@@ -1,12 +1,13 @@
 .burger-nav-bar {
-  display: none;
+  margin-top: -142px;
+  display: flex;  
   padding: 40px 0;
   box-sizing: border-box;
-  width: 100%;
-  display: none;
+  width: 100%; 
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  transition: .6s linear;
 }
 
 @media screen and (max-width: 619px) {

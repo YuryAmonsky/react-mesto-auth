@@ -16,8 +16,8 @@
   .header {
     width: 100%;
     padding-top: calc(28px + 17 * (100vw - 320px) / 560);
-    padding-right: calc(30px - 30*(100vw - 320px)/560);  
-    border-top: 1px solid #545454;  
+    padding-right: 30px;
+    border-top: 1px solid #545454;
     min-height: 56px;
   }
 }
