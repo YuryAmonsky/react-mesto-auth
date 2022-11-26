@@ -37,3 +37,7 @@ Mesto - это фотохостинг, отображающий пользова
 * Портирование на React.js  
    Репозиторий: https://github.com/YuryAmonsky/mesto-react  
    Демо: https://yuryamonsky.github.io/mesto-react/  
+* Создание собственного бекенда.  
+   https://github.com/YuryAmonsky/express-mesto-gha  
+* Фронтенд и бекенд. Деплой на публичный сервер.  
+   https://github.com/YuryAmonsky/react-mesto-api-full  
